@@ -18,32 +18,36 @@ import {
   Workflow
 } from 'lucide-react';
 
-// --- HOOK PERSONALIZADO PARA ANIMACIÓN AL HACER SCROLL ---
-const useScrollReveal = (): [React.RefObject<HTMLDivElement>, boolean] => {
+// --- HOOK PERSONALIZADO CON TIPADO ESTRICTO DE TYPESCRIPT ---
+const useScrollReveal = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    const currentRef = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entry.target);
+          if (currentRef) observer.unobserve(currentRef);
         }
       },
       { threshold: 0.1 }
     );
-    if (ref.current) observer.observe(ref.current);
+    
+    if (currentRef) observer.observe(currentRef);
+    
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (currentRef) observer.unobserve(currentRef);
     };
   }, []);
 
-  return [ref, isVisible];
+  // "as const" le dice a TypeScript que esto es una Tupla exacta, no un array genérico
+  return [ref, isVisible] as const; 
 };
 
-// --- COMPONENTE DEL LOGO ---
-const BeMakerLogo = ({ className = "w-8 h-8" }) => (
+// --- COMPONENTE DEL LOGO CON TIPADO ---
+const BeMakerLogo = ({ className = "w-8 h-8" }: { className?: string }) => (
   <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <path 
       d="M 25 20 C 65 20 75 30 75 45 C 75 52 65 55 55 55 C 65 55 80 60 80 75 C 80 92 65 100 25 100" 
@@ -60,7 +64,7 @@ const BeMakerLogo = ({ className = "w-8 h-8" }) => (
 // --- COMPONENTE DE LA TERMINAL ---
 const TerminalMockup = () => {
   const [lines, setLines] = useState<{text: string, type: string}[]>([]);
-  const [isTyping, setIsTyping] = useState(true);
+  const [isTyping, setIsTyping] = useState<boolean>(true);
   
   const fullCommands = [
     { text: "> bemaker init --project \"innovative\"", type: "command" },
@@ -73,7 +77,7 @@ const TerminalMockup = () => {
   useEffect(() => {
     let currentLine = 0;
     let currentChar = 0;
-    let typingInterval: NodeJS.Timeout;
+    let typingInterval: ReturnType<typeof setTimeout>;
 
     const typeLine = () => {
       if (currentLine >= fullCommands.length) {
@@ -106,6 +110,7 @@ const TerminalMockup = () => {
 
     typingInterval = setTimeout(typeLine, 1000);
     return () => clearTimeout(typingInterval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -141,8 +146,8 @@ const TerminalMockup = () => {
 
 // --- COMPONENTE PRINCIPAL DE LA PÁGINA ---
 export default function Page() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,7 +157,7 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Referencias para las animaciones
+  // Ahora TS entiende perfectamente que esto es un [RefObject<HTMLDivElement>, boolean]
   const [heroRef, heroVisible] = useScrollReveal();
   const [servicesRef, servicesVisible] = useScrollReveal();
   const [terminalRef, terminalVisible] = useScrollReveal();
@@ -218,7 +223,7 @@ export default function Page() {
         <div className="absolute inset-0 bg-glow-blue z-0"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-glow-red z-0"></div>
 
-        <div
+        <div 
           ref={heroRef}
           className={`relative z-10 max-w-4xl mx-auto flex flex-col items-center transition-all duration-1000 transform ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         >
@@ -258,7 +263,7 @@ export default function Page() {
         <div className="absolute left-0 top-0 w-1/3 h-full bg-glow-blue opacity-50 pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <div
+          <div 
             ref={servicesRef}
             className={`text-center mb-16 transition-all duration-1000 ${servicesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
@@ -288,7 +293,7 @@ export default function Page() {
       {/* --- TERMINAL / TALENT SECTION --- */}
       <section id="terminal" className="py-24 px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div
+          <div 
             ref={terminalRef}
             className={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center transition-all duration-1000 ${terminalVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
@@ -323,7 +328,7 @@ export default function Page() {
         <div className="absolute right-0 bottom-0 w-1/2 h-full bg-glow-red opacity-30 pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto">
-          <div
+          <div 
             ref={statsRef}
             className={`grid grid-cols-1 lg:grid-cols-2 gap-16 transition-all duration-1000 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
@@ -358,7 +363,7 @@ export default function Page() {
 
       {/* --- CTA SECTION --- */}
       <section id="contacto" className="py-32 px-6 relative">
-        <div
+        <div 
           ref={ctaRef}
           className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
         >
