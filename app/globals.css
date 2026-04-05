@@ -19,8 +19,21 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Menda', 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(237, 8, 7, 0.5);
+}
+
+.bg-glow-blue {
+  background: radial-gradient(circle at center, rgba(1, 0, 102, 0.15) 0%, rgba(3, 3, 8, 0) 70%);
+}
+
+.bg-glow-red {
+  background: radial-gradient(circle at center, rgba(237, 8, 7, 0.1) 0%, rgba(3, 3, 8, 0) 70%);
 }
