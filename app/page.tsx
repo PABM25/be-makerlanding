@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { 
   Code2, 
   Layout, 
@@ -45,17 +46,7 @@ const useScrollReveal = () => {
 
 // --- COMPONENTE DEL LOGO CON TIPADO ---
 const BeMakerLogo = ({ className = "w-8 h-8" }: { className?: string }) => (
-  <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path 
-      d="M 25 20 C 65 20 75 30 75 45 C 75 52 65 55 55 55 C 65 55 80 60 80 75 C 80 92 65 100 25 100" 
-      stroke="#ED0807" 
-      strokeWidth="12" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    />
-    <circle cx="45" cy="40" r="7" fill="#ED0807" />
-    <circle cx="45" cy="78" r="7" fill="#ED0807" />
-  </svg>
+  <Image src="/logo.png" alt="BeMaker Logo" width={32} height={32} className={className} />
 );
 
 // --- COMPONENTE DE LA TERMINAL ---
@@ -225,7 +216,7 @@ export default function Page() {
           className={`relative z-10 max-w-4xl mx-auto flex flex-col items-center transition-all duration-1000 transform ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         >
           <div className="mb-8 relative">
-            <BeMakerLogo className="w-24 h-24 lg:w-32 lg:h-32 drop-shadow-[0_0_30px_rgba(237,8,7,0.6)]" />
+            <Image src="/logo.png" alt="BeMaker Logo" width={128} height={128} className="drop-shadow-[0_0_30px_rgba(237,8,7,0.6)]" />
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
@@ -391,7 +382,7 @@ export default function Page() {
       <footer className="bg-[#030308] border-t border-[#010066]/30 py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center space-x-2">
-            <BeMakerLogo className="w-6 h-6" />
+            <Image src="/logo.png" alt="BeMaker Logo" width={24} height={24} />
             <span className="text-lg font-bold">BeMaker</span>
           </div>
           
